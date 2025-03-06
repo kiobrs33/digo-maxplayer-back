@@ -47,8 +47,11 @@ export class AuthController {
       }
 
       // Generando el token con JWT
-      const userId = String(user.user_id);
-      const token = await JwtUtil.generateToken({ userId });
+      const token = await JwtUtil.generateToken({
+        user_id: user.user_id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      });
 
       res.status(200).json({
         ok: true,
@@ -84,8 +87,11 @@ export class AuthController {
       const user = await this._authService.createUser(body);
 
       // Generando el token con JWT
-      const userId = String(user.user_id);
-      const token = await JwtUtil.generateToken({ userId });
+      const token = await JwtUtil.generateToken({
+        user_id: user.user_id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      });
 
       res.status(200).json({
         ok: true,

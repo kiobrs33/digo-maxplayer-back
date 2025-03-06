@@ -1,15 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { JwtUtil } from '../util/jwt.util';
 import { PrismaClient } from '@prisma/client';
+import { IJwtPayload, ISessionRequest } from '../interfaces/session.interfaces';
 
 const prisma = new PrismaClient();
 
-interface SessionRequest extends Request {
-  user?: { user_id: number; role: { name: string } };
-}
-
 export const validateToken = async (
-  req: SessionRequest,
+  req: ISessionRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -26,9 +23,9 @@ export const validateToken = async (
     }
 
     const token = authHeader.split(' ')[1];
-    const valueToken = await JwtUtil.verifyToken(token);
+    const valueToken = (await JwtUtil.verifyToken(token)) as IJwtPayload;
 
-    if (!valueToken?.userId) {
+    if (!valueToken?.user_id) {
       res.status(401).json({
         ok: false,
         status: 'error',
@@ -39,7 +36,7 @@ export const validateToken = async (
 
     // Obtener usuario junto con el rol desde Prisma
     const user = await prisma.user.findUnique({
-      where: { user_id: Number(valueToken.userId) },
+      where: { user_id: Number(valueToken.user_id) },
       include: { role: true }, // Esto asegura que traemos el rol del usuario
     });
 
@@ -52,11 +49,11 @@ export const validateToken = async (
       return;
     }
 
-    console.log('USER => ', user);
-
     // Guardar solo la información relevante en req.user
     req.user = {
       user_id: user.user_id,
+      first_name: user.first_name,
+      last_name: user.last_name,
       role: {
         name: user.role.name, // Esto permite que validateRole pueda verificarlo
       },

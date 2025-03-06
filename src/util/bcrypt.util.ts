@@ -1,7 +1,5 @@
 import bcrypt from 'bcrypt';
 
-console.log('BcryptUtil', process.env.JWT_SECRET);
-
 export class BcryptUtil {
   // Esta variable no puede cambiarse y pertenece a la clase, no a una instancia
   private static readonly saltRounds = 10;

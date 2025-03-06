@@ -1,5 +1,3 @@
-console.log('PaginatorUtil', process.env.JWT_SECRET);
-
 export class PaginatorUtil {
   /**
    * Calcula la paginación en función de los parámetros proporcionados.

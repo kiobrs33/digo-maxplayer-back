@@ -12,12 +12,18 @@ router.get(
   validateRole(['admin']),
   userController.getUsers
 );
-router.get('/:id', userController.getOneUser);
-router.post('/', userController.createUser);
-router.put('/:id', userController.updateUser);
+router.get('/:id', validateToken, userController.getOneUser);
+router.post('/', validateToken, userController.createUser);
+router.put(
+  '/:id',
+  validateToken,
+  validateRole(['admin']),
+  userController.updateUser
+);
 router.delete(
   '/:id',
-
+  validateToken,
+  validateRole(['admin']),
   userController.deleteUser
 );
 

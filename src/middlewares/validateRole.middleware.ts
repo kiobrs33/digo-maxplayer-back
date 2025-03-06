@@ -1,18 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-interface AuthRequest extends Request {
-  user?: { user_id: number; role: { name: string } };
-}
+import { NextFunction, Response } from 'express';
+import { ISessionRequest } from '../interfaces/session.interfaces';
 
 /**
  * Middleware para validar si el usuario tiene el rol adecuado.
  * @param allowedRoles Lista de roles permitidos.
  */
 export const validateRole = (allowedRoles: string[]) => {
-  return async (req: AuthRequest, res: Response, next: NextFunction) => {
+  return async (req: ISessionRequest, res: Response, next: NextFunction) => {
     try {
       if (!req.user) {
         res.status(401).json({
@@ -23,13 +17,7 @@ export const validateRole = (allowedRoles: string[]) => {
         return;
       }
 
-      // Obtener el usuario con su rol desde la base de datos
-      const user = await prisma.user.findUnique({
-        where: { user_id: req.user.user_id },
-        include: { role: true },
-      });
-
-      if (!user) {
+      if (!req.user) {
         res.status(404).json({
           ok: false,
           status: 'error',
@@ -39,7 +27,7 @@ export const validateRole = (allowedRoles: string[]) => {
       }
 
       // Verificar si el rol del usuario está en la lista de roles permitidos
-      if (!allowedRoles.includes(user.role.name)) {
+      if (!allowedRoles.includes(req.user.role.name)) {
         res.status(403).json({
           ok: false,
           status: 'error',

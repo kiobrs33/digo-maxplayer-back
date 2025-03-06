@@ -1,4 +1,5 @@
 import './util/env.util';
+
 import express from 'express';
 import cors from 'cors';
 import { AuthRoute } from './auth';
@@ -21,6 +22,5 @@ app.get('/api', (req, res) => {
 });
 
 app.listen(port, () => {
-  // eslint-disable-next-line no-console
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });

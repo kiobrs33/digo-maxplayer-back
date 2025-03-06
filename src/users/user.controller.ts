@@ -27,7 +27,6 @@ export class UserController {
           totalItems
         );
         const { currentPage, itemsPerPage, offset, totalPages } = paginator;
-
         const users = await this._userService.getUsers(offset, itemsPerPage);
 
         res.status(200).json({

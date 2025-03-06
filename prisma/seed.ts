@@ -1,9 +1,8 @@
 import { PaymentType, PrismaClient, RoleType } from '@prisma/client';
 import { faker } from '@faker-js/faker';
-import { BcryptUtil } from '../src/util/bcryptUtil';
+import { BcryptUtil } from '../src/util/bcrypt.util';
 
 const prisma = new PrismaClient();
-const bcryptUtil = new BcryptUtil();
 
 async function main() {
   console.log('Seeding DATABASE SEED...');
@@ -36,7 +35,7 @@ async function main() {
   ]);
 
   // Encriptando la contraseña
-  const hashPassword = await bcryptUtil.hashPassword('12345678');
+  const hashPassword = await BcryptUtil.hashPassword('12345678');
 
   // Generando 10 usuarios ficticios
   const users = Array.from({ length: 10 }).map(() => {
